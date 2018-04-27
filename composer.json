@@ -1,0 +1,15 @@
+{
+  "name": "dennisdigital/behat-google-optimize",
+  "description": "Behat context and steps for Google Optimize",
+  "type": "project",
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "behat/mink":   "~1.5",
+    "drupal/drupal-extension": "^3.1"
+  },
+  "autoload": {
+    "psr-4": {"DennisDigital\\Behat\\GoogleOptimize\\": "src"}
+  }
+}
