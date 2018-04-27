@@ -15,14 +15,12 @@ class PageHideContext implements DrupalAwareInterface {
   private $drupal;
 
   /**
-   * The environment obtained for the before scenario scope.
-   *
-   * @var BeforeScenarioScope
+   * @var HookDispatcher
    */
-  private $environment;
+  private $dispatcher;
 
   /**
-   * Whether Google Optimize Page Hide should be on or off by default.
+   * Google Optimize Page Hide default value.
    *
    * @var bool
    */
@@ -39,7 +37,7 @@ class PageHideContext implements DrupalAwareInterface {
    * @inheritDoc
    */
   public function setDispatcher(HookDispatcher $dispatcher) {
-    // TODO: Implement setDispatcher() method.
+    $this->dispatcher = $dispatcher;
   }
 
   /**
@@ -64,17 +62,17 @@ class PageHideContext implements DrupalAwareInterface {
   }
 
   /**
-   * @BeforeScenario
+   * @BeforeScenario @javascript
    *
    * @param BeforeScenarioScope $scope
    */
   public function beforeScenario(BeforeScenarioScope $scope) {
-    // Keep the environment available.
-    $this->environment = $scope->getEnvironment();
+    // Disable before each scenario.
+    $this->isDisabled();
   }
 
   /**
-   * @AfterScenario
+   * @AfterScenario @javascript
    *
    * @param AfterScenarioScope $scope
    */
@@ -93,7 +91,7 @@ class PageHideContext implements DrupalAwareInterface {
     }
     // Turn it on.
     $this->enabledChanged = TRUE;
-    $this->setVariable('google_optimize_hide_page_enable', 1);
+    $this->setVariable('google_optimize_hide_page_enable', TRUE);
   }
 
   /**
@@ -106,7 +104,7 @@ class PageHideContext implements DrupalAwareInterface {
     }
     // Turn it off.
     $this->enabledChanged = TRUE;
-    $this->setVariable('google_optimize_hide_page_enable', 0);
+    $this->setVariable('google_optimize_hide_page_enable', FALSE);
   }
 
   /**
@@ -116,7 +114,7 @@ class PageHideContext implements DrupalAwareInterface {
    */
   public function isReset() {
     if ($this->enabledChanged) {
-      $val = empty($this->enabledDefaultValue) ? 0 : 1;
+      $val = empty($this->enabledDefaultValue) ? FALSE : TRUE;
       $this->setVariable('google_optimize_hide_page_enable', $val);
     }
   }
